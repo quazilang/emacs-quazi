@@ -12,6 +12,10 @@
     ("\\_<\\(true\\|false\\|none\\)\\_>" . font-lock-constant-face)
     ("\\_<[[:upper:]][[:alnum:]_]*\\_>" . font-lock-type-face)))
 
+;; Defined by eglot, which is loaded on demand below.
+(defvar eglot-server-programs)
+(declare-function eglot-ensure "eglot" ())
+
 (define-derived-mode quazi-mode prog-mode "Quazi" "Major mode for Quazi source files."
   :syntax-table (let ((table (make-syntax-table)))
                   (modify-syntax-entry ?_ "w" table)
