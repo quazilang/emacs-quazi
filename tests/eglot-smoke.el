@@ -6,13 +6,23 @@
 ;; `qz lsp`, and checks hover and go-to-definition answers.
 
 (require 'eglot)
-(add-to-list 'load-path (expand-file-name ".." (file-name-directory load-file-name)))
 
-(let ((command (getenv "QUAZI_LSP_COMMAND")))
-  (unless (and command (not (string-empty-p command)))
-    (error "Set QUAZI_LSP_COMMAND to the qz executable"))
-  (setq quazi-lsp-command (list command "lsp")))
-(require 'quazi-mode)
+;; With QUAZI_SMOKE_INSTALLED=1 (tests/install-smoke.sh) quazi-mode comes
+;; from the installed package: nothing is required here, `.qz' must select
+;; the mode through the package autoloads, and `qz' comes from PATH.
+(if (equal (getenv "QUAZI_SMOKE_INSTALLED") "1")
+    (progn
+      (when (featurep 'quazi-mode) (error "quazi-mode was loaded before visiting a file"))
+      (unless (string-prefix-p (expand-file-name package-user-dir)
+                               (or (locate-library "quazi-mode") ""))
+        (error "quazi-mode is not installed under %s: %S"
+               package-user-dir (locate-library "quazi-mode"))))
+  (add-to-list 'load-path (expand-file-name ".." (file-name-directory load-file-name)))
+  (let ((command (getenv "QUAZI_LSP_COMMAND")))
+    (unless (and command (not (string-empty-p command)))
+      (error "Set QUAZI_LSP_COMMAND to the qz executable"))
+    (setq quazi-lsp-command (list command "lsp")))
+  (require 'quazi-mode))
 
 (defvar quazi-smoke--root (make-temp-file "quazi-eglot-smoke-" t))
 (add-hook 'project-find-functions

@@ -1,5 +1,20 @@
 ;;; quazi-mode.el --- Quazi major mode and Eglot integration -*- lexical-binding: t; -*-
 
+;; Copyright (C) 2026 by quazilang
+
+;; Version: 0.1.0
+;; Package-Requires: ((emacs "29.1"))
+;; Keywords: languages
+;; URL: https://github.com/quazilang/emacs-quazi
+;; SPDX-License-Identifier: 0BSD
+
+;;; Commentary:
+
+;; Major mode for Quazi (`.qz') source files.  It highlights Quazi syntax and
+;; starts the contained language server (`qz lsp') through Eglot.
+
+;;; Code:
+
 (require 'prog-mode)
 
 (defgroup quazi nil "Quazi language support." :group 'languages)
@@ -16,6 +31,7 @@
 (defvar eglot-server-programs)
 (declare-function eglot-ensure "eglot" ())
 
+;;;###autoload
 (define-derived-mode quazi-mode prog-mode "Quazi" "Major mode for Quazi source files."
   :syntax-table (let ((table (make-syntax-table)))
                   (modify-syntax-entry ?_ "w" table)
